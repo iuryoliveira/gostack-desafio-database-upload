@@ -1,6 +1,5 @@
-// import AppError from '../errors/AppError';
-
 import { getRepository, getCustomRepository } from 'typeorm';
+import AppError from '../errors/AppError';
 
 import Transaction from '../models/Transaction';
 
@@ -20,6 +19,10 @@ class CreateTransactionService {
     type,
     categoryName,
   }: Request): Promise<Transaction> {
+    if (type !== 'income' && type !== 'outcome') {
+      throw new AppError('Invalid transaction type', 400);
+    }
+
     const transactionRepository = getRepository(Transaction);
     const categoryRepository = getCustomRepository(CategoryRepository);
 
