@@ -1,11 +1,11 @@
 // import AppError from '../errors/AppError';
 
-import { getRepository } from 'typeorm';
+import { getRepository, getCustomRepository } from 'typeorm';
 
 import Transaction from '../models/Transaction';
-import Category from '../models/Category';
 
 import CreateCategoryService from './CreateCategoryService';
+import CategoryRepository from '../repositories/CategoryRepository';
 
 interface Request {
   title: string;
@@ -21,13 +21,11 @@ class CreateTransactionService {
     categoryName,
   }: Request): Promise<Transaction> {
     const transactionRepository = getRepository(Transaction);
-    const categoryRepository = getRepository(Category);
+    const categoryRepository = getCustomRepository(CategoryRepository);
 
     let categoryId;
 
-    const findCategory = await categoryRepository.findOne({
-      where: { title: categoryName },
-    });
+    const findCategory = await categoryRepository.findByTitle(categoryName);
 
     if (!findCategory) {
       const createCategory = new CreateCategoryService();
