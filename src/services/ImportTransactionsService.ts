@@ -5,12 +5,18 @@ import Transaction from '../models/Transaction';
 import CreateTransactionService from './CreateTransactionService';
 
 interface Request {
-  transactionsData: Transaction[];
+  transactionsData: Array<{
+    title: string;
+    type: 'income' | 'outcome';
+    value: number;
+    categoryName: string;
+  }>;
 }
 
 class ImportTransactionsService {
   async execute(transactionsData: Request): Promise<Transaction[]> {
     const createTransaction = new CreateTransactionService();
+    console.log(transactionsData);
 
     const transactionList = transactionsData.transactionsData.map(
       async transaction => {
