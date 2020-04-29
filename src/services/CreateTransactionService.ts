@@ -21,7 +21,6 @@ class CreateTransactionService {
     categoryName,
   }: Request): Promise<Transaction> {
     if (type !== 'income' && type !== 'outcome') {
-      console.log(type);
       throw new AppError('Invalid transaction type', 400);
     }
 

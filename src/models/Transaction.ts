@@ -36,6 +36,18 @@ class Transaction {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  public constructor(
+    title: string,
+    type: 'income' | 'outcome',
+    value: number,
+    category_id: string,
+  ) {
+    this.title = title;
+    this.type = type;
+    this.value = value;
+    this.category_id = category_id;
+  }
 }
 
 export default Transaction;
