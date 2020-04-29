@@ -1,7 +1,8 @@
-import { getRepository, getCustomRepository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
 import AppError from '../errors/AppError';
 
 import Transaction from '../models/Transaction';
+import TransactionRepository from '../repositories/TransactionsRepository';
 
 import CreateCategoryService from './CreateCategoryService';
 import CategoryRepository from '../repositories/CategoryRepository';
@@ -23,8 +24,16 @@ class CreateTransactionService {
       throw new AppError('Invalid transaction type', 400);
     }
 
-    const transactionRepository = getRepository(Transaction);
+    const transactionRepository = getCustomRepository(TransactionRepository);
     const categoryRepository = getCustomRepository(CategoryRepository);
+
+    if (type === 'outcome') {
+      const { total } = await transactionRepository.getBalance();
+
+      if (total - value < 0) {
+        throw new AppError('Transaction value exceeds the limit.', 400);
+      }
+    }
 
     let categoryId;
 
